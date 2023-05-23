@@ -66,8 +66,9 @@ while True:
                 while sensorCorEsquerda.color() != Color.BLACK:
                     robo.drive(0,-75)
             if sensorCorEsquerda.color() == Color.GREEN:
-                robo.turn(-7)
+                robo.turn(-5)
                 if sensorCorEsquerda.color() == Color.GREEN:
+                    robo.turn(-5)
                     robo.stop()
                     break
                 break
@@ -82,8 +83,9 @@ while True:
                 while sensorCorDireita.color() != Color.BLACK:
                     robo.drive(0,75)
             if sensorCorDireita.color() == Color.GREEN:
-                robo.turn(7)
+                robo.turn(5)
                 if sensorCorDireita.color() == Color.GREEN:
+                    robo.turn(5)
                     robo.stop()
                     break
                 break
@@ -92,8 +94,6 @@ while True:
         robo.straight(5)
         robo.stop() 
         robo.turn(-10)
-        if sensorCorEsquerda.color() == Color.BLACK:
-            pass
         if sensorCorEsquerda.color() == Color.BLACK:
             pass
         elif sensorCorEsquerda.color() == Color.GREEN:
@@ -122,14 +122,12 @@ while True:
                 if sensorCorDireita.color() == Color.GREEN:
                     while sensorCorDireita.color() != Color.BLACK:
                         robo.drive(0,90)
-                    robo.straight(-20)
+                    robo.straight(-30)
 
     elif sensorCorDireita.color() == Color.GREEN:
         robo.straight(5)
         robo.stop()
         robo.turn(10)
-        if sensorCorDireita.color() == Color.BLACK:
-            pass
         if sensorCorDireita.color() == Color.BLACK:
             pass
         elif sensorCorDireita.color() == Color.GREEN:
@@ -158,7 +156,7 @@ while True:
                 if sensorCorEsquerda.color() == Color.GREEN:
                     while sensorCorEsquerda.color() != Color.BLACK:
                         robo.drive(0,-90)
-                    robo.straight(-20)
+                    robo.straight(-30)
     
     robo.drive(90,0)
 
