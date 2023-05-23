@@ -101,7 +101,7 @@ while True:
             while sensorCorEsquerda.color() != Color.WHITE:
                 robo.drive(-30,0)
             while sensorCorEsquerda.color() != Color.BLACK or sensorCorDireita.color() != Color.GREEN:
-                robo.drive(25,10)
+                robo.drive(25,13)
                 if sensorCorEsquerda.color() == Color.BLACK:
                     robo.stop()
                     break
@@ -135,7 +135,7 @@ while True:
             while sensorCorDireita.color() != Color.WHITE:
                 robo.drive(-30,0)
             while sensorCorDireita.color() != Color.BLACK or sensorCorEsquerda.color() != Color.GREEN:
-                robo.drive(25,-10)
+                robo.drive(25,-13)
                 if sensorCorDireita.color() == Color.BLACK:
                     robo.stop()
                     break
