@@ -24,13 +24,7 @@ sensorCorDireita = ColorSensor(Port.S2)
 #iniciando sensor ultrasonico
 ultraSonico = UltrasonicSensor(Port.S3)
 
-# nota
-# velocidade:90 
-# ajustar no preto: 2/4 de 90 (45)
-# curva: 1/4 de 90 (22.5)
-
-
-# < Funções >
+# Obstaculo
 def voltaObstaculo():
 
     # ajusta o robo se quando ele detectar o obstaculo e tiver na linha preta
@@ -47,148 +41,127 @@ def voltaObstaculo():
     robo.turn(-45)
     robo.straight(140)
     robo.turn(-45)
-    robo.straight(230)
+    robo.straight(220)
     robo.turn(-45)
     robo.straight(80)
     robo.turn(-20)
-    robo.straight(80)
     while sensorCorDireita.color() != Color.BLACK:
         robo.drive(50,-18)
-    while sensorCorDireita.color() != Color.WHITE:
-        robo.drive(50,0)
+    robo.straight(30)
     while sensorCorDireita.color() != Color.BLACK:
-        robo.drive(0,25)
-    while sensorCorEsquerda.color() != Color.BLACK:
-        robo.drive(0,25)
+        robo.drive(0,50) 
+    while sensorCorDireita.color() != Color.WHITE:
+        robo.drive(0,50) 
 
-def funcaoPreto():
+while True:
+    
     if sensorCorEsquerda.color() == Color.BLACK:
+        robo.stop()
         while sensorCorEsquerda.color() != Color.WHITE:
-            robo.drive(0,-45)
-            # verde
-            if sensorCorEsquerda.color() == Color.GREEN:
-                break
-        # dois pretos
-        if sensorCorDireita.color() == Color.BLACK:
-            while sensorCorEsquerda.color() != Color.BLACK:
-                robo.drive(0,22.5)
-            while sensorCorEsquerda.color() != Color.WHITE:
-                robo.drive(90,0)
-            robo.turn(10)
-            robo.straight(30)
+            robo.drive(0,-25)
             if sensorCorDireita.color() == Color.BLACK:
-                pass
-            else:
+                robo.stop()
+                robo.turn(30)
+                robo.straight(60)
                 while sensorCorEsquerda.color() != Color.BLACK:
-                    robo.drive(0,-22.5)# talvez inverter valor
-                    if sensorCorDireita.color() == Color.BLACK:
-                        break
-
-    elif sensorCorDireita.color() == Color.BLACK:
+                    robo.drive(0,-75)
+            if sensorCorEsquerda.color() == Color.GREEN:
+                robo.turn(-7)
+                if sensorCorEsquerda.color() == Color.GREEN:
+                    robo.stop()
+                    break
+                break
+    elif sensorCorDireita.color() == Color.BLACK: 
+        robo.stop()
         while sensorCorDireita.color() != Color.WHITE:
-            robo.drive(0,45)  
-            if sensorCorDireita.color() == Color.GREEN:
-                break 
-        # dois pretos
-        if sensorCorEsquerda.color() == Color.BLACK:
-            while sensorCorDireita.color() != Color.BLACK:
-                robo.drive(0,-22.5)
-            while sensorCorEsquerda.color() != Color.WHITE:
-                robo.drive(90,0)
-            robo.turn(-10)
-            robo.straight(30)
+            robo.drive(0,25)
             if sensorCorEsquerda.color() == Color.BLACK:
-                pass
-            else:
+                robo.stop()
+                robo.turn(-30)
+                robo.straight(60)
                 while sensorCorDireita.color() != Color.BLACK:
-                    robo.drive(0,22.5)# talvez inverter valor
-                    if sensorCorEsquerda.color() == Color.BLACK:
-                        break
-
-def funcaoVerde():
-    if sensorCorEsquerda.color() == Color.GREEN:
-        while sensorCorEsquerda.color() != Color.BLACK:
-            robo.drive(0,22.5)
-        while sensorCorEsquerda.color() != (Color.WHITE or Color.GREEN):
-            robo.drive(0,-22.5)
-        if sensorCorEsquerda.color() == Color.GREEN:
-            while sensorCorEsquerda.color() != Color.WHITE:
-                robo.drive(-45,0)
-            robo.drive(22.5,0)
-            while True:
-                if sensorCorEsquerda.color() == Color.BLACK:
-                    # curva verde esquerda
-                    robo.turn(-10)
-                    if sensorCorEsquerda.color() != Color.WHITE:
-                        while sensorCorEsquerda.color() != Color.BLACK:
-                            robo.drive(45,0)
-                        robo.turn(-10)
-                        robo.straight(30)
-                        while sensorCorEsquerda.color() != Color.WHITE:
-                            robo.drive(45,0)
-                        while sensorCorEsquerda.color() != Color.BLACK:
-                            robo.drive(0,-22.5)
-                        while sensorCorEsquerda.color() != Color.WHITE:
-                            robo.drive(0,-22.5)
-                        False
+                    robo.drive(0,75)
+            if sensorCorDireita.color() == Color.GREEN:
+                robo.turn(7)
                 if sensorCorDireita.color() == Color.GREEN:
-                    # dois verdes
-                    robo.straight(-20)
+                    robo.stop()
+                    break
+                break
+
+    if sensorCorEsquerda.color() == Color.GREEN:
+        robo.straight(5)
+        robo.stop() 
+        robo.turn(-10)
+        if sensorCorEsquerda.color() == Color.BLACK:
+            pass
+        if sensorCorEsquerda.color() == Color.BLACK:
+            pass
+        elif sensorCorEsquerda.color() == Color.GREEN:
+            robo.stop()
+            while sensorCorEsquerda.color() != Color.WHITE:
+                robo.drive(-30,0)
+            while sensorCorEsquerda.color() != Color.BLACK or sensorCorDireita.color() != Color.GREEN:
+                robo.drive(25,10)
+                if sensorCorEsquerda.color() == Color.BLACK:
+                    robo.stop()
+                    break
+                elif sensorCorDireita.color() == Color.GREEN:
+                    robo.stop()
+                    break
+            robo.stop()
+            if sensorCorEsquerda.color() == Color.BLACK:
+                robo.turn(-20)
+                robo.straight(60)
+                while sensorCorEsquerda.color() != Color.BLACK:
+                    robo.drive(0,-45)
+            elif sensorCorDireita.color() == Color.GREEN:
+                robo.straight(10)
+                while sensorCorDireita.color() != Color.WHITE:
+                    robo.drive(0,45)
+                robo.turn(-20)
+                if sensorCorDireita.color() == Color.GREEN:
                     while sensorCorDireita.color() != Color.BLACK:
-                        robo.drive(0,45)
-                    False
+                        robo.drive(0,90)
+                    robo.straight(-20)
 
     elif sensorCorDireita.color() == Color.GREEN:
-        while sensorCorDireita.color() != Color.BLACK:
-            robo.drive(0,-22.5)
-        while sensorCorDireita.color() != (Color.WHITE or Color.GREEN):
-            robo.drive(0,22.5)
-        if sensorCorDireita.color() == Color.GREEN:
+        robo.straight(5)
+        robo.stop()
+        robo.turn(10)
+        if sensorCorDireita.color() == Color.BLACK:
+            pass
+        if sensorCorDireita.color() == Color.BLACK:
+            pass
+        elif sensorCorDireita.color() == Color.GREEN:
+            robo.stop()
             while sensorCorDireita.color() != Color.WHITE:
-                robo.drive(-45,0)
-            robo.drive(22.5,0)
-            while True:
+                robo.drive(-30,0)
+            while sensorCorDireita.color() != Color.BLACK or sensorCorEsquerda.color() != Color.GREEN:
+                robo.drive(25,-10)
                 if sensorCorDireita.color() == Color.BLACK:
-                    # curva verde direita
-                    robo.turn(10)
-                    if sensorCorDireita.color() != Color.WHITE:
-                        while sensorCorDireita.color() != Color.BLACK:
-                            robo.drive(45,0)
-                        robo.turn(10)
-                        robo.straight(30)
-                        while sensorCorDireita.color() != Color.WHITE:
-                            robo.drive(45,0)
-                        while sensorCorDireita.color() != Color.BLACK:
-                            robo.drive(0,22.5)
-                        while sensorCorDireita.color() != Color.WHITE:
-                            robo.drive(0,22.5)
-                        False
+                    robo.stop()
+                    break
+                elif sensorCorEsquerda.color() == Color.GREEN:
+                    robo.stop()
+                    break
+            robo.stop()
+            if sensorCorDireita.color() == Color.BLACK:
+                robo.turn(20)
+                robo.straight(60)
+                while sensorCorDireita.color() != Color.BLACK:
+                    robo.drive(0,45)
+            elif sensorCorEsquerda.color() == Color.GREEN:
+                robo.straight(10)
+                while sensorCorEsquerda.color() != Color.WHITE:
+                    robo.drive(0,-45)
+                robo.turn(20)
                 if sensorCorEsquerda.color() == Color.GREEN:
-                    # dois verdes
-                    robo.straight(-20)
                     while sensorCorEsquerda.color() != Color.BLACK:
-                        robo.drive(0,-45)
-                    False
+                        robo.drive(0,-90)
+                    robo.straight(-20)
+    
+    robo.drive(90,0)
 
-# </ Funções >
-
-# < Algoritimo >
-while True:
-    if (sensorCorEsquerda.color() or sensorCorDireita.color()) == Color.BLACK:
-        robo.stop()
-        funcaoPreto()
-
-    if (sensorCorEsquerda.color() or sensorCorDireita.color()) == Color.GREEN:
-        robo.stop()
-        funcaoVerde()
-
+    # obstaculo
     if ultraSonico.distance() < 50:
         voltaObstaculo()
-    
-
-    #if (sensorCorEsquerda.reflection() or sensorCorDireita.reflection()) > 99:
-    #    ev3.speaker.beep()
-    #    robo.Stop()
-
-    robo.drive(90,0)
-# </ Algoritimo >
