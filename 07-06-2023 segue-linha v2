@@ -73,9 +73,9 @@ while True:
                         robo.drive(70,0)
                     robo.turn(-40)
                     while sensorCorEsquerda.color() != Color.BLACK:
-                        robo.drive(70,0)
+                        robo.drive(90,0)
                     while sensorCorEsquerda.color() != Color.WHITE:
-                        robo.drive(70,0)
+                        robo.drive(90,0)
                     while sensorCorEsquerda.color() != Color.BLACK:
                         robo.drive(0,-40)
                     break
@@ -102,9 +102,9 @@ while True:
                         robo.drive(70,0)
                     robo.turn(40)
                     while sensorCorDireita.color() != Color.BLACK:
-                        robo.drive(70,0)
+                        robo.drive(90,0)
                     while sensorCorDireita.color() != Color.WHITE:
-                        robo.drive(70,0)
+                        robo.drive(90,0)
                     while sensorCorDireita.color() != Color.BLACK:
                         robo.drive(0,40)
                     break
@@ -119,32 +119,36 @@ while True:
     #Verficia preto
     if sensorCorEsquerda.color() == Color.BLACK:
         while sensorCorEsquerda.color() != Color.WHITE:
-            robo.drive(0,-40)
             if sensorCorDireita.color() == Color.BLACK:
                 while sensorCorDireita.color() != Color.WHITE:
                     robo.drive(0,40)
                 robo.straight(60)
                 while sensorCorDireita.color() != Color.BLACK:
-                    robo.drive(0,-60)
+                    robo.drive(0,-70)
                 while sensorCorDireita.color() != Color.WHITE:
                     robo.drive(0,40)
             elif sensorCorEsquerda.color() == Color.GREEN:
+                robo.drive(0,0)
+                robo.straight(-10)
                 break
+            robo.drive(0,-40)
     elif sensorCorDireita.color() == Color.BLACK:
         while sensorCorDireita.color() != Color.WHITE:
-            robo.drive(0,40)
             if sensorCorEsquerda.color() == Color.BLACK:
                 while sensorCorEsquerda.color() != Color.WHITE:
                     robo.drive(0,-40)
                 robo.straight(60)
                 while sensorCorEsquerda.color() != Color.BLACK:
-                    robo.drive(0,60)
+                    robo.drive(0,70)
                 while sensorCorEsquerda.color() != Color.WHITE:
                     robo.drive(0,-40)
             elif sensorCorDireita.color() == Color.GREEN:
+                robo.drive(0,0)
+                robo.straight(-10)
                 break
+            robo.drive(0,40)
 
     # Verificação área de resgate
     if (sensorCorEsquerda.reflection() > 99 or sensorCorDireita.reflection() > 99):
         robo.drive(0,0)
-        ev3.speaker.bepp()
+        ev3.speaker.beep()
