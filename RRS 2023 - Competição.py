@@ -6,160 +6,158 @@ from pybricks.parameters import Port, Stop, Direction, Button, Color
 from pybricks.tools import wait, StopWatch, DataLog
 from pybricks.robotics import DriveBase
 from pybricks.media.ev3dev import SoundFile, ImageFile
+from AreaResgate import *
 
-#ev3
-ev3 = EV3Brick()
 
-#inicando motores
-motorEsquerdo = Motor(Port.A, gears=[24, 24, 24 , 24, 24])
-motorDireito = Motor(Port.B, gears=[24, 24, 24 , 24, 24])
+EV3 = EV3Brick()
+LEFT_ENGINE = Motor(Port.A, gears=[24, 24, 24 , 24, 24])
+RIGHT_ENGINE = Motor(Port.B, gears=[24, 24, 24 , 24, 24])
+OPEN_CLOSE_CLAW_ENGINE = Motor(Port.C)
+CURVE_ENGINE = Motor(Port.D)
+LEFT_COLOR_SENSOR = ColorSensor(Port.S1)
+RIGHT_COLOR_SENSOR = ColorSensor(Port.S2)
+ROBOT = DriveBase(LEFT_ENGINE, RIGHT_ENGINE, wheel_diameter=53, axle_track=225)
 
-#inicia DriveBase
-robo = DriveBase(motorEsquerdo, motorDireito, wheel_diameter=55, axle_track=200)
+GREEN_COLOR = Color.GREEN
+BLACK_COLOR = Color.BLACK
+WHITE_COLOR = Color.WHITE
 
-#iniciando sensores de cor
-sensorCorEsquerda = ColorSensor(Port.S1)
-sensorCorDireita = ColorSensor(Port.S2)
+ULTRASONIC = UltrasonicSensor(Port.S3)
 
-#iniciando sensor ultrasonico
-ultraSonico = UltrasonicSensor(Port.S3)
+def testeTrueGreen(sensor):
+    ROBOT.drive(0,0)
+    AMOUNT_OF_TESTS = 300
+    colorList = []
+    controlerAddColorToList=0
+    controlerModaColor=0
+    green = 0
+    black = 0
 
-# Obstaculo
-def voltaObstaculo():
+    while controlerAddColorToList!=AMOUNT_OF_TESTS:
+        colorList.append(sensor.color())    
+        controlerAddColorToList += 1
+    while controlerModaColor < len(colorList):
+        if colorList[controlerModaColor] == GREEN_COLOR:
+            green += 1
+        elif colorList[controlerModaColor] == BLACK_COLOR:
+            black += 1
+        controlerModaColor += 1
+    
+    if green > black:
+        return True
+    else:
+        ROBOT.straight(-10)
+        return False
 
-    # ajusta o robo se quando ele detectar o obstaculo e tiver na linha preta
-    if sensorCorEsquerda.color() == Color.BLACK:
-        while sensorCorEsquerda.color() != Color.WHITE:
-            robo.drive(0,-25)
-    elif sensorCorDireita.color() == Color.BLACK:
-        while sensorCorDireita.color() != Color.WHITE:
-            robo.drive(0,25)
-
-    # realiza o desvio
-    robo.turn(90)
-    robo.straight(120)
-    robo.turn(-45)
-    robo.straight(140)
-    robo.turn(-45)
-    robo.straight(220)
-    robo.turn(-45)
-    robo.straight(80)
-    robo.turn(-20)
-    while sensorCorDireita.color() != Color.BLACK:
-        robo.drive(50,-18)
-    robo.straight(30)
-    while sensorCorDireita.color() != Color.BLACK:
-        robo.drive(0,50) 
-    while sensorCorDireita.color() != Color.WHITE:
-        robo.drive(0,50) 
 
 while True:
-    
-    if sensorCorEsquerda.color() == Color.BLACK:
-        robo.stop()
-        while sensorCorEsquerda.color() != Color.WHITE:
-            robo.drive(0,-25)
-            if sensorCorDireita.color() == Color.BLACK:
-                robo.stop()
-                robo.turn(30)
-                robo.straight(60)
-                while sensorCorEsquerda.color() != Color.BLACK:
-                    robo.drive(0,-75)
-            if sensorCorEsquerda.color() == Color.GREEN:
-                robo.turn(-5)
-                if sensorCorEsquerda.color() == Color.GREEN:
-                    robo.turn(-5)
-                    robo.stop()
-                    break
-                break
-    elif sensorCorDireita.color() == Color.BLACK: 
-        robo.stop()
-        while sensorCorDireita.color() != Color.WHITE:
-            robo.drive(0,25)
-            if sensorCorEsquerda.color() == Color.BLACK:
-                robo.stop()
-                robo.turn(-30)
-                robo.straight(60)
-                while sensorCorDireita.color() != Color.BLACK:
-                    robo.drive(0,75)
-            if sensorCorDireita.color() == Color.GREEN:
-                robo.turn(5)
-                if sensorCorDireita.color() == Color.GREEN:
-                    robo.turn(5)
-                    robo.stop()
-                    break
-                break
+    ROBOT.drive(65,0)
 
-    if sensorCorEsquerda.color() == Color.GREEN:
-        robo.straight(5)
-        robo.stop() 
-        robo.turn(-10)
-        if sensorCorEsquerda.color() == Color.BLACK:
-            pass
-        elif sensorCorEsquerda.color() == Color.GREEN:
-            robo.stop()
-            while sensorCorEsquerda.color() != Color.WHITE:
-                robo.drive(-30,0)
-            while sensorCorEsquerda.color() != Color.BLACK or sensorCorDireita.color() != Color.GREEN:
-                robo.drive(25,13)
-                if sensorCorEsquerda.color() == Color.BLACK:
-                    robo.stop()
-                    break
-                elif sensorCorDireita.color() == Color.GREEN:
-                    robo.stop()
-                    break
-            robo.stop()
-            if sensorCorEsquerda.color() == Color.BLACK:
-                robo.turn(-20)
-                robo.straight(60)
-                while sensorCorEsquerda.color() != Color.BLACK:
-                    robo.drive(0,-45)
-            elif sensorCorDireita.color() == Color.GREEN:
-                robo.straight(10)
-                while sensorCorDireita.color() != Color.WHITE:
-                    robo.drive(0,45)
-                robo.turn(-20)
-                if sensorCorDireita.color() == Color.GREEN:
-                    while sensorCorDireita.color() != Color.BLACK:
-                        robo.drive(0,90)
-                    robo.straight(-30)
+    if LEFT_COLOR_SENSOR.reflection() > 99 or RIGHT_COLOR_SENSOR.reflection() > 99:
+        ROBOT.drive(0,0)
+        EV3.speaker.beep()
+        area_resgate()
 
-    elif sensorCorDireita.color() == Color.GREEN:
-        robo.straight(5)
-        robo.stop()
-        robo.turn(10)
-        if sensorCorDireita.color() == Color.BLACK:
-            pass
-        elif sensorCorDireita.color() == Color.GREEN:
-            robo.stop()
-            while sensorCorDireita.color() != Color.WHITE:
-                robo.drive(-30,0)
-            while sensorCorDireita.color() != Color.BLACK or sensorCorEsquerda.color() != Color.GREEN:
-                robo.drive(25,-13)
-                if sensorCorDireita.color() == Color.BLACK:
-                    robo.stop()
+    if LEFT_COLOR_SENSOR.color() == GREEN_COLOR:
+        ROBOT.drive(0,0)
+        if testeTrueGreen(LEFT_COLOR_SENSOR)==True:
+            while LEFT_COLOR_SENSOR.color() != WHITE_COLOR:
+                ROBOT.drive(-40,0)
+            while LEFT_COLOR_SENSOR.color() != BLACK_COLOR:
+                ROBOT.drive(40,25)
+                if RIGHT_COLOR_SENSOR.color() == GREEN_COLOR:
                     break
-                elif sensorCorEsquerda.color() == Color.GREEN:
-                    robo.stop()
+                elif LEFT_COLOR_SENSOR.color() == BLACK_COLOR:
+                    while LEFT_COLOR_SENSOR.color() != BLACK_COLOR:
+                        ROBOT.drive(70,0)
+                    ROBOT.turn(-40)
+                    while LEFT_COLOR_SENSOR.color() != BLACK_COLOR:
+                        ROBOT.drive(90,0)
+                    while LEFT_COLOR_SENSOR.color() != WHITE_COLOR:
+                        ROBOT.drive(90,25)
+                    while LEFT_COLOR_SENSOR.color() != BLACK_COLOR:
+                        ROBOT.drive(0,-40)
                     break
-            robo.stop()
-            if sensorCorDireita.color() == Color.BLACK:
-                robo.turn(20)
-                robo.straight(60)
-                while sensorCorDireita.color() != Color.BLACK:
-                    robo.drive(0,45)
-            elif sensorCorEsquerda.color() == Color.GREEN:
-                robo.straight(10)
-                while sensorCorEsquerda.color() != Color.WHITE:
-                    robo.drive(0,-45)
-                robo.turn(20)
-                if sensorCorEsquerda.color() == Color.GREEN:
-                    while sensorCorEsquerda.color() != Color.BLACK:
-                        robo.drive(0,-90)
-                    robo.straight(-30)
-    
-    robo.drive(90,0)
+            ROBOT.drive(0,0)
+            if RIGHT_COLOR_SENSOR.color() == GREEN_COLOR:
+                ROBOT.straight(-10)
+                while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+                    ROBOT.drive(0,80)
+    elif RIGHT_COLOR_SENSOR.color() == GREEN_COLOR:
+        ROBOT.drive(0,0)
+        if testeTrueGreen(RIGHT_COLOR_SENSOR)==True:
+            while RIGHT_COLOR_SENSOR.color() != WHITE_COLOR:
+                ROBOT.drive(-40,0)
+            while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+                ROBOT.drive(40,-25)
+                if LEFT_COLOR_SENSOR.color() == GREEN_COLOR:
+                    break
+                elif RIGHT_COLOR_SENSOR.color() == BLACK_COLOR:
+                    while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+                        ROBOT.drive(70,0)
+                    ROBOT.turn(40)
+                    while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+                        ROBOT.drive(90,0)
+                    while RIGHT_COLOR_SENSOR.color() != WHITE_COLOR:
+                        ROBOT.drive(90,-25)
+                    while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+                        ROBOT.drive(0,40)
+                    break
+            ROBOT.drive(0,0)
+            if LEFT_COLOR_SENSOR.color() == GREEN_COLOR:
+                ROBOT.straight(-10)
+                while LEFT_COLOR_SENSOR.color() != BLACK_COLOR:
+                    ROBOT.drive(0,-80)
 
-    # obstaculo
-    if ultraSonico.distance() < 50:
-        voltaObstaculo()
+    if LEFT_COLOR_SENSOR.color() == BLACK_COLOR:
+        while LEFT_COLOR_SENSOR.color() != WHITE_COLOR:
+            if RIGHT_COLOR_SENSOR.color() == BLACK_COLOR:
+                ROBOT.turn(20)
+                while LEFT_COLOR_SENSOR.color() != BLACK_COLOR:
+                    ROBOT.drive(0, 50)
+                ROBOT.straight(30)
+                while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+                    ROBOT.drive(40, -50)
+                while RIGHT_COLOR_SENSOR.color() != WHITE_COLOR:
+                    ROBOT.drive(30, 60)
+            ROBOT.drive(5, -30)
+    elif RIGHT_COLOR_SENSOR.color() == BLACK_COLOR:
+        while RIGHT_COLOR_SENSOR.color() != WHITE_COLOR:
+            if LEFT_COLOR_SENSOR.color() == BLACK_COLOR:
+                ROBOT.turn(-20)
+                while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+                    ROBOT.drive(0, -50)
+                ROBOT.straight(30)
+                while LEFT_COLOR_SENSOR.color() != BLACK_COLOR:
+                    ROBOT.drive(40, 50)
+                while LEFT_COLOR_SENSOR.color() != WHITE_COLOR:
+                    ROBOT.drive(30, -60)
+            ROBOT.drive(5, 30)
+
+    if ULTRASONIC.distance() < 65:
+        ROBOT.drive(0,0)
+        if LEFT_COLOR_SENSOR.color() == BLACK_COLOR:
+            while LEFT_COLOR_SENSOR.color() != WHITE_COLOR:
+                ROBOT.drive(0,-25)
+        elif RIGHT_COLOR_SENSOR.color() == BLACK_COLOR:
+            while RIGHT_COLOR_SENSOR.color() != WHITE_COLOR:
+                ROBOT.drive(0,25)
+
+        ROBOT.turn(90)
+        ROBOT.straight(140)
+        ROBOT.turn(-45)
+        ROBOT.straight(140)
+        ROBOT.turn(-45)
+        ROBOT.straight(220)
+        ROBOT.turn(-45)
+        ROBOT.straight(140)
+        while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+            ROBOT.drive(50,-18)
+        while RIGHT_COLOR_SENSOR.color() != WHITE_COLOR:
+            ROBOT.drive(50,0)
+        ROBOT.straight(10)
+        while RIGHT_COLOR_SENSOR.color() != BLACK_COLOR:
+            ROBOT.drive(0,50)
+        while RIGHT_COLOR_SENSOR.color() != WHITE_COLOR:
+            ROBOT.drive(0,50)
+        EV3.speaker.beep()
